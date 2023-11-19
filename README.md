@@ -1,8 +1,8 @@
 <h1>Hi, I'm Eric! <br/><a href="https://github.com/ResonantCyberSheild"></a> <a href="https://www.linkedin.com/in/eric-purdie-/">Cybersecurity Enthusiast  </a>
 
 <h2>🧾 Certificate:</h2>
--IBM Cybersecurity Analyst Professional Certificate (https://www.credly.com/badges/cab75f37-f32a-4388-aa72-660d74cd4471)
-
+</h2>IBM Cybersecurity Analyst Professional Certificate </h2>(https://www.credly.com/badges/cab75f37-f32a-4388-aa72-660d74cd4471)
+Qualys Vulnerability Management (https://acrobat.adobe.com/id/urn:aaid:sc:US:abb9f2a1-1d3d-4cfe-b71c-ed83d1a38a4d)
 
 <h2>👨‍💻Cybersecurity Projects:</h2>
 
