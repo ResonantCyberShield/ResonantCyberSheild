@@ -65,3 +65,13 @@ All of the following routes are public (no login), use the app's own design toke
 - /privacy (must match the real data flows)
 - /terms
 - /delete-account (public deletion instructions and request form)
+
+## Monetization
+
+Default, from references/monetization_default.md:
+- Free forever, with ads in compliant AdSlot placements; Pro is ad-free.
+- A 14-day free trial that starts on the first Pro tap, one per person.
+- Pro features: [list].
+- Ad placements: [this app's content screens].
+- Blocked ad categories: [categories that conflict with the app's subject].
+- Entitlement is set only by the server, from store/Stripe events.

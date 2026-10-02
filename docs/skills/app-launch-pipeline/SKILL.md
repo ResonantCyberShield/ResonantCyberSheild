@@ -56,7 +56,8 @@ Once a niche is chosen, write a structured prompt using the template in `referen
 3. **Pages** — one subsection per screen, describing what's shown and how it behaves, not just a feature list.
 4. **Design direction** — a real palette (named hex values), real type pairing, and one signature visual element that's specific to this app's subject, not a generic SaaS look. Each app in this pipeline should look and feel distinct from the others, even when they share a category (see the "Pause" vs. "Tidewater" vs. "The Ledger" prompts as reference — same category, three different visual languages, each justified by what the app actually does).
 5. **Behavior notes** — cross-cutting rules: what's always live-calculated, mobile-first constraints, privacy/data-scope rules (per-user RLS), disclaimers where relevant (e.g. "not tax advice").
-6. **Standard pages and content** — every app ships the same public trust and support pages, styled in the app's own design: About, Contact, Guide, FAQ, Privacy Policy, Terms and Delete account, linked from the footer and from Settings. It also ships the low-value-content defense: a public landing page, a resources hub of 5–8 original articles, honest comparison pages, and a sitemap and the other search basics. Follow `references/standard_pages.md` for what each page must contain. These aren't optional extras: store review needs the privacy, deletion and support URLs, and users judge a new app's trustworthiness partly from them. Never invent company facts or support addresses; leave clearly marked placeholders and list them for the owner.
+6. **Standard pages and content** — every app ships the same public trust and support pages, styled in the app's own design: About, Contact, Guide, FAQ, Privacy Policy, Terms and Delete account, linked from the footer and from Settings. It also ships the low-value-content defense: a public landing page, a resources hub of 5–8 original articles, honest comparison pages, and a sitemap and the other search basics. Follow `references/standard_pages.md` for what each page must contain.
+7. **Monetization (default for every app)** — a free forever tier with compliant ad slots, Pro with a **14-day free trial** that starts lazily on the first Pro tap (one trial per person), and an ad-free Pro tier. Follow `references/monetization_default.md`: approved ad placements, banned screens, AdSense on the web vs AdMob in the app, consent, and blocked ad categories. Only drop ads or the trial if the owner explicitly says so for that app. These aren't optional extras: store review needs the privacy, deletion and support URLs, and users judge a new app's trustworthiness partly from them. Never invent company facts or support addresses; leave clearly marked placeholders and list them for the owner.
 
 Deliver this as a markdown file the user can review/edit before it goes anywhere near Base44 — don't call the Base44 connector unprompted. Only call `create_base44_app` or `edit_base44_app` directly when the user explicitly asks you to run it.
 
@@ -73,6 +74,12 @@ Also confirm, as part of this gate:
 - The Privacy Policy matches the app's real data flows.
 - The in-app "Delete my account" flow and the public `/delete-account` URL both work.
 - The support address is real and confirmed by the owner.
+- Monetization matches `references/monetization_default.md`:
+  - no ads on banned screens, and no ads for Pro or trialing users;
+  - the 14-day trial starts lazily and only once per person;
+  - the Android build doesn't serve AdSense inside a plain WebView;
+  - `ads.txt` is verified live;
+  - Data safety declares ads.
 
 ---
 
