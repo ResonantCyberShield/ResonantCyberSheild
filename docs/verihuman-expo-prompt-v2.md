@@ -22,6 +22,7 @@ Free users get unlimited on-device Quick Scans. Pro users (subscription with a 1
 - **Purchases:** `react-native-iap` (StoreKit 2 / Play Billing). The store is the source of truth, but **always validate receipts on the server** (App Store Server API / Google Play Developer API) before granting Pro. Never trust a client-side purchase event alone.
 - **Backend:** a small serverless API (any host) for receipt validation, the trial ledger, Verified Scan and Deep Analyze. See the security section.
 - **Fonts:** `@expo-google-fonts/source-serif-4`, `inter`, `ibm-plex-mono`.
+- **Gradients:** `expo-linear-gradient`. **Colored glow on Android:** `react-native-shadow-2`.
 - **Concern Ring:** `react-native-svg`.
 - **Audio:** try `react-native-audio-api` (Software Mansion) first, because its `decodeAudioData` lets the web FFT code port unchanged. If it can't decode m4a/mp3/ogg/opus, fall back to decoding to PCM with a native decoder and running the same FFT. Write down which path you took and why. Never drop or fake the voice check: if decoding fails, show "Couldn't read this audio format".
 - Run voice analysis **off the JS thread** (a worklet or worker). In testing, a 60-second clip took 5.6 s on a server CPU on the main thread.
@@ -111,21 +112,24 @@ The app keeps data locally in SQLite. A server mirror is needed only for Pro and
    - Export data (JSON) and Delete all data. Both work on any plan, and delete is confirmed by typing DELETE.
    - Sign out, plus "How the checks work".
 
-## Design tokens: "Night Scanner" (carry over exactly)
+## Design tokens: "Night Scanner, Bold" (carry over exactly)
 
-Dark mode is the main presentation, and light mode is secondary. Design every screen in dark first. The app should look like it is actively scanning, not showing a static score.
+Dark mode is the main presentation. The boldness is deliberate: color should cover a large part of every screen (gradient headers, glowing card borders, filled gradient buttons). Think Cash App or Robinhood, not a muted dark app with one accent color.
 
 Dark (primary):
 
 | Token | Value | Use |
 |---|---|---|
 | bg | #0B0F1A | App background |
-| surface | #10141F | Cards and sheets |
+| surface (card) | #141A2C | Cards; clearly lifted from the background |
 | ink | #EAF6FF | Text |
 | ink-soft | #7C94AA | Secondary text |
 | safe (cyan) | #00E5FF, soft fill #07312F | Low concern |
 | caution (amber) | #FFC24B, soft fill #3A2A0A | Some concern |
 | risk (magenta) | #FF3D71, soft fill #3A0E1C | High concern |
+| violet | #6C4CFF | Decorative gradient bridge only; never a status color |
+| gradient | linear 135°: #00E5FF 0% → #6C4CFF 55% → #FF3D71 100% | Header band, primary buttons, Upgrade hero |
+| gradient-ink | #061018 | Text on the gradient |
 
 Light (secondary):
 
@@ -138,24 +142,32 @@ Light (secondary):
 | safe (cyan) | #008299, soft fill #E0F7FA | Low concern |
 | caution (amber) | #B9770E, soft fill #FDF1DD | Some concern |
 | risk (magenta) | #D81B60, soft fill #FCE4EC | High concern |
+| gradient | linear 135°: #00E5FF → #6C4CFF 55% → #D81B60 | Header band, primary buttons, Upgrade hero |
+| gradient-ink | #061018 | Text on the gradient |
 
-Contrast was checked against the surface color.
-- **Dark:** every concern color passes for text (cyan 12:1, amber 11.5:1, magenta 5.4:1).
-- **Light:** the concern colors fall below 4.5:1 (cyan 4.0, amber 3.2, magenta 4.4). In light mode, use them on the ring arc, a dot or the chip's soft fill. Text and numbers stay ink.
+**Where the gradient goes:** the Dashboard header band, every primary button (filled with `expo-linear-gradient`, never outlined), and the Upgrade/Pro hero. These are the most visible surfaces in the app and should look bold.
 
-**Signature detail, required:**
-- In dark mode, give the Concern Ring's active arc, and any active indicator in a concern color, a soft glow in its own color, about `0 0 18px`.
+**Cards:** every Contact card and signal row gets a border tinted with its own concern color at about 20–30% opacity. A safe card should read cyan at a glance and a risk card magenta, before any text is read.
+
+**Signature glow (dark mode only):**
+- The Concern Ring's active arc gets two layers of glow in its own color: a tight inner glow (about `0 0 16px`) plus a wide soft outer glow (about `0 0 32px`).
+- Primary gradient buttons get the same two-layer glow.
 - iOS: use `shadowColor` + `shadowRadius` + `shadowOpacity`.
-- Android: `elevation` won't produce a colored glow. Use a blurred, colored view behind the ring, or `react-native-shadow-2`.
+- Android: use `react-native-shadow-2` or a blurred, colored view behind the element.
 - Verify the glow on both platforms.
-- No glow in light mode.
-- Respect reduced motion. The glow is static, and only the arc's fill animates, once, over 700 ms.
+- Light mode drops the glow but keeps the gradient fills and the tinted borders.
 
-**Theme:** use `useColorScheme()` plus a theme context with three states (system / light / dark), stored locally.
+**Contrast, measured; follow these rules:**
+- **Dark:** concern colors on the surface pass for any text (cyan 12:1, amber 11.5:1, magenta 5.4:1).
+- **Light:** concern colors fall below 4.5:1 on the surface. Use them for arcs, dots, borders and soft fills only. Text and numbers stay ink.
+- **Gradient text:** `gradient-ink` on the gradient bottoms out around 3.7:1 (dark) and 3.3:1 (light) over the violet middle. Text on a gradient must therefore be large-text sized: at least 18px semibold, or 24px regular. Never put small captions on the gradient.
+- **Accessibility:** a band is never shown by color alone. The ring's accessibility label reads like "Concern level 72 of 100, high concern".
+
+**Theme:** `useColorScheme()` plus a theme context with three states (system / light / dark), stored locally.
 
 **Type:** Source Serif 4 for headlines and the score readout, Inter for body text, IBM Plex Mono for every number.
 
-**Accessibility:** a band is never shown by color alone. The ring's accessibility label reads like "Concern level 72 of 100, high concern".
+**Motion:** the arc fills once over 700 ms. The glow is static. Respect reduced motion.
 
 ## Security model (assume someone will attack this)
 
