@@ -48,3 +48,24 @@ Write them in the app's own voice and visual language, never as generic boilerpl
 ## In the Base44 prompt
 
 Add a "Standard pages" section to every Stage 3 prompt that lists these seven routes, says they're public, and points to this file's rules. Also add footer and Settings links to them.
+
+## Low-value-content defense (required for every app)
+
+Google flags thin, tool-only or login-only surfaces as "low value content". This hits AdSense and AdMob approval, Play review and search ranking alike. It's judged **screen by screen**, so a login wall in front of everything is the worst case. Every app ships these too:
+
+8. **A public landing page at `/`** for logged-out visitors and crawlers; signed-in users go straight to the app.
+   - A hero with a plain one-line value proposition, then a "How it works" section (one block per core feature, with a real explanation).
+   - A "Why this matters" section with cited, real statistics from authoritative sources: link the source and never round up or invent numbers.
+   - A free vs paid summary, a short FAQ teaser, trust signals (privacy stance, "who built this"), and a call to action into sign-up.
+   - At least 800 words of original copy in total.
+9. **A resources / guides hub (`/resources`) with 5–8 original articles of 800–1,500 words each**, on the real questions the Stage 2 research surfaced.
+   - Each article is written for that topic, not spun from a template.
+   - Each one has a byline or "Reviewed by" placeholder for the owner to fill in, a last-updated date, cited sources, and internal links to the relevant app feature and to related articles.
+   - Never auto-generate near-duplicate variants (per-city, per-number and similar).
+10. **One or two honest comparison pages** (`/compare/[competitor]`) where Stage 2 found a dominant competitor. Be fair about what the competitor does better.
+11. **Search and crawl basics:**
+    - A unique title and meta description on every public page, plus Open Graph tags.
+    - `sitemap.xml` listing every public route, and a `robots.txt` that allows public pages and blocks app-only routes.
+    - FAQPage or Article JSON-LD where it applies.
+    - A footer with links to every public page.
+12. **No thin screens.** Every in-app result screen carries a sentence or two explaining what the result means, alongside the number. Empty, loading, confirmation and error screens never carry ads. If the app ever adds ads, run the full checklist in the `subscription-trial-model` skill ("Ad-supported free tiers") against every ad-bearing screen, and verify `ads.txt` by fetching the live URL.
