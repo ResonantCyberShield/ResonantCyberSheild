@@ -144,3 +144,19 @@ Avoid: hacker green-on-black, shield-and-padlock security clichés, red alert ba
 - Mobile-first, built for Play Store wrapping: one consistent back stack (the hardware or browser back goes to the previous screen, and from a result goes back to where the scan started, never exiting the app from a nested screen). Respect safe-area insets. Tap targets of 44px or more. Pull-to-refresh on Home and Contact Detail. Optimistic updates for attach, rename, delete and theme changes, with rollback and a toast on failure. Skeleton loaders instead of spinners on lists.
 - Scans finish visibly: show a short step-by-step progress line ("Reading file… Checking metadata… Scoring…") so the user can see work happened. Analysis must never be faked or artificially delayed.
 - Accessibility: band colors always appear with a text label, never color alone. WCAG AA contrast in both themes. The ring has an aria-label like "Concern level 72 of 100, high concern".
+
+## Audit checklist: run this before calling it done
+
+Don't stop at "it builds and the screens render". Check each of these specifically:
+
+- **Quick Scan input really stays on the device.** The engines in `src/lib/engines/` must not import the Base44 client or call fetch, upload or LLM functions. The only network write in the Quick path should be saving the *result* to the Scan entity, and the UI copy must say exactly that.
+- **The Concern level can't be set directly.** Contact has no score field. The contact score comes only from its Scans through the weighted formula.
+- **The trial starts only on a real gated-feature tap.** It must not start at signup, on page load or on the `status` call. A fresh user who stays idle must still have no `trial_started_at`.
+- **The trial-abuse backstop survives account re-creation.** TrialLedger is keyed by a hashed email, can be written only by the service role, and isn't touched by "Delete all my data". It never relies on localStorage.
+- **Subscription state can't be self-granted.** No client-callable function or entity RLS rule lets a user set their own status to active or trialing. Only the signed Stripe webhook (later, Play Billing) can activate. Verified Scan and Deep Analyze check Pro on the server.
+- **A lapsed trial or subscription never hides history.** The full scan timeline and past Verified results stay visible and exportable. Only new Pro actions and the trend chart lock.
+- **Export and delete work on a free account.** Test them on an account that has never been Pro.
+- **Every Scan Result renders the "signal, not a verdict" disclaimer**, including high-concern and Deep Analyze results.
+- **Every upload to the server is disclosed before it happens**, for all Verified and Deep Analyze types, including message text.
+- **The concern colors stay distinct and readable in both themes.** In light mode, gold and coral fall below text contrast on fog, so they must carry the band on the ring, a dot or the chip, never on the text itself.
+- **Play Billing before Play submission.** Stripe is web-only. A wrapped Android build must switch to Play Billing for in-app subscriptions.
