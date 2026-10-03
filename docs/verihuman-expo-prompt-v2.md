@@ -169,6 +169,21 @@ Light (secondary):
 
 **Motion:** the arc fills once over 700 ms. The glow is static. Respect reduced motion.
 
+## Pricing (Pro tier)
+
+There is one Pro entitlement with two store products:
+
+| Plan | Price | Product ID |
+|---|---|---|
+| Monthly | $9.99/month | `com.verihuman.pro.monthly` |
+| Annual | $79.99/year (≈ $6.67/mo, "save ~33%") | `com.verihuman.pro.annual` |
+
+- Swap in the real bundle ID for the product IDs.
+- **Upgrade screen:** show both plans side by side, with Annual preselected and a "Best value" badge.
+- **Trial:** the 14-day free trial applies to whichever plan the user picks first.
+- **Entitlement:** the server maps both product IDs to the same entitlement after validating the receipt.
+- **Ads:** the free tier carries ads in compliant slots; Pro is ad-free.
+
 ## Security model (assume someone will attack this)
 
 - **Pro is granted only on the server**, after receipt validation. No client call can set it to active or trialing.
